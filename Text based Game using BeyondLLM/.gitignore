@@ -1,0 +1,3 @@
+__pycache__/
+.env
+game_logic.py
