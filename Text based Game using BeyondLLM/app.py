@@ -59,67 +59,62 @@ if api_key:
     st.title("24 Hours of a Normal Human")
     st.image("background.jpg", use_column_width=True)  # Background image
 
-    if 'history' not in st.session_state:
-        st.session_state.history = []
-    if 'help_text' not in st.session_state:
-        st.session_state.help_text = ""
+    # Initialize session state if not already present
+    if "messages" not in st.session_state:
+        st.session_state.messages = [
+            {"role": "assistant", "content": "Hello there! Welcome to '24 Hours of a Normal Human.' Enter 'Start' to begin your game."}
+        ]
+    if "help_message" not in st.session_state:
+        st.session_state.help_message = ""
 
-    def format_chat_history(history):
-        formatted_history = ""
-        for entry in history:
-            if entry.startswith("You:"):
-                formatted_history += f"**You:** {entry[4:]}\n\n"
-            elif entry.startswith("Game Host:"):
-                formatted_history += f"**Game Host:** {entry[11:]}\n\n"
-        return formatted_history
+    # Display the existing chat messages via `st.chat_message`.
+    for message in st.session_state.messages:
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
 
-    def start_game():
-        if not st.session_state.history:
-            st.session_state.history = ["Game Host: Hello there! Welcome to '24 Hours of a Normal Human.'"]
-            st.session_state.history.append("Game Host: [Game Start]\n\nWelcome to '24 Hours of a Normal Human,' Charles Sterling. You find yourself in the body of 17-year-old Jake Miller. Your mission is to uncover the mystery behind this strange situation and return to your own life.\n\nYou wake up in Jake's bedroom, feeling disoriented and confused. As you look around, you notice details that don't match your memories. A high school backpack, posters of rock bands, and a messy desk filled with school supplies surround you.\n\nYou stumble out of bed and head to the bathroom. Staring back at you in the mirror is not your 45-year-old reflection, but the face of a teenager. Panic sets in as you realize the gravity of your situation.\n\n[Current Location: Jake Miller's Bedroom]\n\n[Available Actions: Explore the room, Check your phone, Leave the room]\n\nWhat would you like to do, Charles?")
-
-    # Input box  
-    user_input = st.text_input("You:", "")
-
-    # Instruction line 
-    st.write("Enter 'Start' to begin your game")
-    st.write("Enter '?help <your query>' for assistance")
-
-    if user_input:
-        if user_input.lower() == 'start':
-            start_game()
-        elif user_input.startswith('?help'):
-            # Process help command
-            query = user_input[6:].strip()
-            help_response = generate_response(query, retriever)
-            st.session_state.help_text = f"**Help Query:** {query}\n\n**Response:** {help_response}"
-            # Do not append help command to history
+    # Create a chat input field to allow the user to enter a message.
+    prompt = st.chat_input("What would you like to do?")
+    if prompt:
+        if prompt.startswith('?help'):
+            query = prompt[6:].strip()
+            with st.spinner("Generating help response..."):
+                help_response = generate_response(query, retriever)
+            st.session_state.help_message = f"**Help Query:** {query}\n\n**Response:** {help_response}"
+        elif prompt.lower() == 'start':
+            response_content = ("[Game Start]\n\nWelcome to '24 Hours of a Normal Human,' Charles Sterling. "
+                                "You find yourself in the body of 17-year-old Jake Miller. Your mission is to uncover "
+                                "the mystery behind this strange situation and return to your own life.\n\n"
+                                "You wake up in Jake's bedroom, feeling disoriented and confused. As you look around, "
+                                "you notice details that don't match your memories. A high school backpack, posters of rock bands, "
+                                "and a messy desk filled with school supplies surround you.\n\n"
+                                "You stumble out of bed and head to the bathroom. Staring back at you in the mirror is not your 45-year-old reflection, "
+                                "but the face of a teenager. Panic sets in as you realize the gravity of your situation.\n\n"
+                                "[Current Location: Jake Miller's Bedroom]\n\n"
+                                "What would you like to do, Charles?")
+            st.session_state.messages.append({"role": "user", "content": prompt})
+            with st.chat_message("user"):
+                st.markdown(prompt)
+            st.session_state.messages.append({"role": "assistant", "content": response_content})
+            with st.chat_message("assistant"):
+                st.markdown(response_content)
         else:
-            st.session_state.history.append(f"You: {user_input}")
-
-            # Generate response for normal commands
-            response = generate_response(user_input, retriever)
-            st.session_state.history.append(f"Game Host: {response}")
-            st.session_state.history.append(f"Game Host: What will you do now?")
-
-    # Display chat history in a styled box
-    chat_history = format_chat_history(st.session_state.history)
-    st.markdown(f"""
-    <div style="height: 300px; overflow-y: scroll; border: 1px solid #ddd; padding: 10px; background-color: #090909; border-radius:10px; color:white;">
-        {chat_history}
-    </div>
-    """, unsafe_allow_html=True)
+            st.session_state.messages.append({"role": "user", "content": prompt})
+            with st.chat_message("user"):
+                st.markdown(prompt)
+            with st.spinner("Generating response..."):
+                response = generate_response(prompt, retriever)
+            st.session_state.messages.append({"role": "assistant", "content": response})
+            with st.chat_message("assistant"):
+                st.markdown(response)
 
     # Display help text in the sidebar
-    if st.session_state.help_text:
-        with st.sidebar:
-            st.header("Help")
+    with st.sidebar:
+        st.header("Help")
+        if st.session_state.help_message:
             st.markdown(f"""
             <div style="background-color: #090909; padding: 10px; border-radius: 5px;">
-                {st.session_state.help_text}
+                {st.session_state.help_message}
             </div>
             """, unsafe_allow_html=True)
-
-    # Ensure the game starts with the right context
-    if st.session_state.history:
-        start_game()
+        else:
+            st.markdown("Type `?help <your query>` in the chat to get assistance.")
