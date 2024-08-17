@@ -33,15 +33,17 @@ To get started with the game, you'll need to set up your development environment
     pip install streamlit beyondllm
     ```
 
-3. Add your API key to the environment variables:
-    ```bash
-    export GOOGLE_API_KEY=<your-api-key>
-    ```
-
-4. Run the Streamlit app:
+3. Run the Streamlit app:
     ```bash
     streamlit run app.py
     ```
+
+4. Add your API key to the game interface:
+    ```bash
+    API: your_google_api
+    ```
+
+
 
 ## Usage
 
