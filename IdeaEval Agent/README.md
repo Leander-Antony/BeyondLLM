@@ -22,11 +22,9 @@ This project is currently in the ideation phase. I am working on defining the ob
 
 ### Prerequisites
 
-- Programming Languages: Python, R
+- Programming Languages: Python
 - Machine Learning Frameworks: TensorFlow, scikit-learn, PyTorch
 - Data Sources: Google Trends, industry reports, financial databases
-- Web Scraping: BeautifulSoup, Scrapy
-- Database: MySQL, PostgreSQL, MongoDB
 
 ### Installation
 
