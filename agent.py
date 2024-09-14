@@ -51,7 +51,7 @@ writer_reviewer_worker = Worker(
     instructions="""
     1. Compose a comprehensive report that integrates findings from all analyses.
     2. Review the composed report for clarity, accuracy, and completeness.
-    3. Finalize the report and save it to a file.
+    3. Finalize the report and print it as a markdown.
     """,
     actions=[WriteFileAction],
     llm=llm,  

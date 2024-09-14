@@ -14,34 +14,6 @@
 - **Improvement Suggestions:** Provide recommendations to enhance ideas or products.
 - **Forecasting:** Predict future outcomes based on market data and trends.
 
-## Project Status
-
-This project is currently in the ideation phase. I am working on defining the objectives, gathering data, and developing the necessary components.
-
-## Getting Started
-
-### Prerequisites
-
-- Programming Languages: Python
-- Machine Learning Frameworks: TensorFlow, scikit-learn, PyTorch
-- Data Sources: Google Trends, industry reports, financial databases
-
-### Installation
-
-Instructions for installing and setting up the project will be provided once development begins.
-
-### Usage
-
-Details on how to use the system will be included in the future documentation.
-
-## Contributing
-
-Contributions are welcome! If you have suggestions or would like to collaborate, please open an issue or pull request.
-
-## Contact
-
-For more information or inquiries, please contact [Leander Antony](mailto:leander@example.com).
-
 
 
 *"The best way to predict the future is to create it."* – Peter Drucker
